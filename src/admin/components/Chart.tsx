@@ -49,7 +49,7 @@ const data = [
     name: "Page G",
     uv: 3490,
     pv: 4300,
-    amt: 2100,
+    amt: 2200,
   },
 ];
 
