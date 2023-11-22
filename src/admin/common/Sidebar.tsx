@@ -34,7 +34,7 @@ const Sidebar = () => {
     : location.pathname.toString();
 
   return (
-    <aside className=" h-[100vh] shadow-2xl py-3">
+    <aside className=" h-[110vh] shadow-2xl py-3">
       <div className="flex items-center justify-center w-full">
         <Link
           to="/"

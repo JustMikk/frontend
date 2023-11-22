@@ -7,7 +7,7 @@ import Chart from "../components/Chart";
 
 const AdminHome = () => {
   return (
-    <div className="flex justify-start">
+    <div className="flex justify-start h-full">
       <Sidebar />
       <div className="flex flex-col w-full">
         <AdminNavbar />
