@@ -65,10 +65,11 @@ const Signin = () => {
           { headers: header }
         );
         // Handle the user response here, for example:
-        console.log(userResponse.data);
+        // console.log(userResponse.data);
         localStorage.setItem("first_name", userResponse.data.first_name);
         localStorage.setItem("last_name", userResponse.data.last_name);
         localStorage.setItem("email", userResponse.data.email);
+        navigate("/");
       } catch (error) {}
     } catch (error) {
       toast.error("Something went wrong.");
