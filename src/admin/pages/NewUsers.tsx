@@ -6,7 +6,7 @@ import UsersTable from "../components/UsersTable";
 import React from "react";
 import CreateUser from "../components/CreateUser";
 
-const Users = () => {
+const NewUsers = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
   return (
@@ -26,11 +26,11 @@ const Users = () => {
         </div>
         <CreateUser onClose={onClose} isOpen={isOpen} cancelRef={cancelRef} />
         <div className="flex flex-col mx-2 md:mx-6 mt-5 border rounded-xl py-3 ">
-          <UsersTable API_URL="http://localhost:8000/api/users/" />
+          <UsersTable API_URL="http://localhost:8000/api/users-not-passed/" />
         </div>
       </div>
     </div>
   );
 };
 
-export default Users;
+export default NewUsers;

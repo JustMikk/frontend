@@ -3,6 +3,7 @@ import { FaUsers } from "react-icons/fa";
 import { HiSpeakerphone } from "react-icons/hi";
 import { AiFillDashboard } from "react-icons/ai";
 import { GiTrophyCup } from "react-icons/gi";
+import { RiUserUnfollowFill } from "react-icons/ri";
 
 const links = [
   {
@@ -11,8 +12,13 @@ const links = [
     href: "/admin",
   },
   {
-    label: "Users",
+    label: "Members",
     icon: <FaUsers size="28" className="text-center" />,
+    href: "/admin/members",
+  },
+  {
+    label: "New Users",
+    icon: <RiUserUnfollowFill size="28" className="text-center" />,
     href: "/admin/users",
   },
   {
