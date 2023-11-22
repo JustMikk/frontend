@@ -1,8 +1,33 @@
 import axios from "axios";
-import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
+  const navigate = useNavigate();
+
+  const checkTokenExpiration = () => {
+    const token = localStorage.getItem("access");
+
+    if (token) {
+      const decodedToken = jwtDecode(token);
+
+      if (!decodedToken || !decodedToken.exp) {
+        return;
+      }
+
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTime) {
+        navigate("/");
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkTokenExpiration();
+  }, []);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -43,13 +68,8 @@ const Signin = () => {
         localStorage.setItem("first_name", userResponse.data.first_name);
         localStorage.setItem("last_name", userResponse.data.last_name);
         localStorage.setItem("email", userResponse.data.email);
-      } catch (error) {
-        // Handle errors in fetching user data
-        // console.error(error);
-      }
+      } catch (error) {}
     } catch (error) {
-      // Handle errors in the initial sign-in request
-      // console.error(error);
       toast.error("Something went wrong.");
     }
   };
