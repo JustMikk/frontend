@@ -43,11 +43,11 @@ const Anouncement = () => {
     fetchEvents();
   }, []);
   return (
-    <div className="flex justify-start bg-neutral-100">
+    <div className="flex justify-start ">
       <Sidebar />
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full ml-24 md:ml-60">
         <AdminNavbar />
-        <div className="flex mt-10 justify-end px-6">
+        <div className="flex justify-end px-6 mt-10">
           <Button
             onClick={onOpen}
             colorScheme="messenger"
@@ -63,9 +63,13 @@ const Anouncement = () => {
           cancelRef={cancelRef}
           onSuccess={handleCreateEventSuccess}
         />
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full p-4 md:p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-4 md:p-6">
           {events.map((event) => (
-            <SingleAnouncement key={event.id} event={event} />
+            <SingleAnouncement
+              key={event.id}
+              event={event}
+              onSuccess={handleCreateEventSuccess}
+            />
           ))}
         </div>
       </div>

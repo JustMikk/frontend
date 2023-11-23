@@ -1,3 +1,4 @@
+import { DeleteIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
   AlertDialogOverlay,
@@ -7,20 +8,34 @@ import {
   AlertDialogFooter,
   Checkbox,
   Avatar,
+  Button,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+interface User {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  passed: boolean;
+  in_dev: boolean;
+  in_cpd: boolean;
+  in_cbd: boolean;
+}
+
 interface SingleUserProps {
   cancelRef: any;
   onClose: any;
   isOpen: any;
-  user: any;
+  user: User;
   API_URL: string;
+  onSuccess: any;
 }
 
 const SingleUser = ({
+  onSuccess,
   cancelRef,
   onClose,
   isOpen,
@@ -33,6 +48,24 @@ const SingleUser = ({
     in_dev: user.in_dev,
     in_cbd: user.in_cbd,
   });
+  console.log(user);
+  const DeleteUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // console.log(formData);
+
+    try {
+      const deleteResponse = await axios.delete(`${API_URL}${user.id}/`, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access")}`,
+        },
+      });
+
+      toast.success("Successfully delleted!");
+      onSuccess();
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,8 +78,8 @@ const SingleUser = ({
       );
 
       toast.success("Successfully saved!");
+      onSuccess();
     } catch (error) {
-      console.error(error);
       toast.error("Something went wrong. Please try again.");
     }
   };
@@ -123,6 +156,16 @@ const SingleUser = ({
                 Save User
               </button>
             </form>
+            <div className="flex items-start justify-end my-2">
+              <Button
+                colorScheme="red"
+                onClick={DeleteUser}
+                className="flex justify-around gap-2"
+              >
+                <DeleteIcon />
+                Delete User
+              </Button>
+            </div>
           </div>
         </AlertDialogFooter>
       </AlertDialogContent>

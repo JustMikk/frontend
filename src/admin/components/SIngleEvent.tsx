@@ -1,9 +1,14 @@
-import { Badge } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { Badge, Button, useDisclosure } from "@chakra-ui/react";
 import { GiTrophyCup } from "react-icons/gi";
 import { Link } from "react-router-dom"; // Import Link here
+import Delete from "./Delete";
+import { useRef } from "react";
 
 interface SingleEventProps {
+  onSuccess: any;
   event: {
+    id: number;
     name: string;
     description: string;
     platform: string;
@@ -39,8 +44,10 @@ const getEventStatus = (start: string, end: string): string => {
     return "Past";
   }
 };
-const SingleEvent: React.FC<SingleEventProps> = ({ event }) => {
+const SingleEvent: React.FC<SingleEventProps> = ({ event, onSuccess }) => {
   const eventStatus = getEventStatus(event.start, event.end);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
 
   let badgeColorScheme: string;
 
@@ -81,6 +88,24 @@ const SingleEvent: React.FC<SingleEventProps> = ({ event }) => {
           {eventStatus}
         </Badge>
       </div>
+      <div className="flex items-start justify-end mt-5">
+        <Button
+          colorScheme="red"
+          onClick={onOpen}
+          className="flex justify-around gap-2"
+        >
+          <DeleteIcon />
+          Delete
+        </Button>
+      </div>
+      <Delete
+        onClose={onClose}
+        isOpen={isOpen}
+        API_URL="http://localhost:8000/api/events"
+        onSuccess={onSuccess}
+        event={event}
+        cancelRef={cancelRef}
+      />
     </div>
   );
 };

@@ -9,9 +9,9 @@ import { useNavigate } from "react-router-dom";
 const AdminHome = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex justify-start h-full">
+    <div className="flex justify-start h-[100vh] bg-neutral-100">
       <Sidebar />
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full h-full ml-24 md:ml-60">
         <AdminNavbar />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full p-4 md:p-6">
           <div
@@ -66,7 +66,7 @@ const AdminHome = () => {
             </div>
           </div>
         </div>
-        <div className="w-full md:px-20">
+        <div className=" md:mx bg-white shadow-2xl rounded-xl m-4 md:m-6 py-6">
           <Chart />
         </div>
       </div>

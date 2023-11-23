@@ -14,11 +14,12 @@ interface CreateProps {
   cancelRef: any;
   onClose: any;
   isOpen: any;
+  onSuccess: any;
 }
 
 const API_URL = "http://localhost:8000/auth";
 
-const CreateUser = ({ cancelRef, onClose, isOpen }: CreateProps) => {
+const CreateUser = ({ cancelRef, onClose, isOpen, onSuccess }: CreateProps) => {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -48,6 +49,7 @@ const CreateUser = ({ cancelRef, onClose, isOpen }: CreateProps) => {
 
       toast.success("Successfully registered!");
       onClose();
+      onSuccess();
     } catch (error) {
       // Handle errors
       console.error(error);

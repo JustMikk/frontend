@@ -1,8 +1,13 @@
-import { Badge } from "@chakra-ui/react";
+import { Badge, Button, useDisclosure } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import React, { useRef } from "react";
 import { HiSpeakerphone } from "react-icons/hi";
+import Delete from "./Delete";
 
 interface SingleAnouncementProps {
+  onSuccess: () => void;
   event: {
+    id: number;
     name: string;
     description: string;
     date: string;
@@ -27,15 +32,21 @@ const getEventStatus = (date: string): string => {
   const currentDate = new Date();
   const dates = new Date(date);
 
-  if (currentDate < dates) {
+  const oneHourAhead = new Date(currentDate.getTime() + 60 * 60 * 1000);
+
+  if (oneHourAhead < dates) {
     return "Upcoming";
-  } else if (currentDate >= dates) {
+  } else if (oneHourAhead >= dates && oneHourAhead <= dates) {
     return "Ongoing";
   } else {
     return "Past";
   }
 };
-const SingleAnouncement: React.FC<SingleAnouncementProps> = ({ event }) => {
+
+const SingleAnouncement: React.FC<SingleAnouncementProps> = ({
+  event,
+  onSuccess,
+}) => {
   const eventStatus = getEventStatus(event.date);
 
   let badgeColorScheme: string;
@@ -54,6 +65,9 @@ const SingleAnouncement: React.FC<SingleAnouncementProps> = ({ event }) => {
       badgeColorScheme = "red";
   }
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
+
   return (
     <div className="p-4 bg-white w-full rounded-xl shadow-xl">
       <HiSpeakerphone size={68} className="text-center text-purple-700" />
@@ -71,6 +85,24 @@ const SingleAnouncement: React.FC<SingleAnouncementProps> = ({ event }) => {
           {eventStatus}
         </Badge>
       </div>
+      <div className="flex items-start justify-end mt-5">
+        <Button
+          colorScheme="red"
+          onClick={onOpen}
+          className="flex justify-around gap-2"
+        >
+          <DeleteIcon />
+          Delete
+        </Button>
+      </div>
+      <Delete
+        onClose={onClose}
+        isOpen={isOpen}
+        API_URL="http://localhost:8000/api/announcements"
+        onSuccess={onSuccess}
+        event={event}
+        cancelRef={cancelRef}
+      />
     </div>
   );
 };

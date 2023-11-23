@@ -153,15 +153,24 @@ const CreateEvent: React.FC<Props> = ({
 
               <Button
                 type="submit"
+                bg="sky.700"
+                _hover="blue.300"
+                color="white"
                 className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
               >
-                Create Event
+                Create
               </Button>
             </Stack>
           </form>
         </AlertDialogBody>
         <AlertDialogFooter>
-          <Button onClick={onClose} className="bg-gray-300 p-2 rounded-md">
+          <Button
+            onClick={onClose}
+            className="bg-gray-300 p-2 rounded-md"
+            color="white"
+            bg="red"
+            _hover="red.200"
+          >
             Cancel
           </Button>
         </AlertDialogFooter>
