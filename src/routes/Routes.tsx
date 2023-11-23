@@ -8,6 +8,7 @@ import Events from "../admin/pages/Events";
 import NewUsers from "../admin/pages/NewUsers";
 import AdminAnouncement from "../admin/pages/Anouncement";
 import Announcements from "../pages/Anouncements";
+import About from "../pages/About";
 
 const Routers = () => {
   return (
@@ -22,6 +23,7 @@ const Routers = () => {
         <Route path="/admin/announcements" element={<AdminAnouncement />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );

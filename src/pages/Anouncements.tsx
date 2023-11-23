@@ -1,4 +1,3 @@
-import { FaLinkedin, FaYoutube, FaTelegram, FaTwitter } from "react-icons/fa";
 import Layout from "../layout/layout";
 import SingleAnouncement from "../components/SingleAnnouncement";
 import axios from "axios";
