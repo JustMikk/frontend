@@ -1,4 +1,4 @@
-// CreateEvent.tsx
+import { DeleteIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
   AlertDialogOverlay,
@@ -20,25 +20,36 @@ import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
+interface Event {
+  id: number; // Assuming the id is a number, adjust accordingly
+  name: string;
+  description: string;
+  platform: string;
+  start: string; // Assuming start and end are string representations of dates
+  end: string;
+}
+
 interface Props {
   cancelRef: any;
   onClose: any;
   isOpen: any;
+  event: Event;
   onSuccess: () => void;
 }
 
-const CreateEvent: React.FC<Props> = ({
+const EditEvent: React.FC<Props> = ({
   cancelRef,
   onClose,
   isOpen,
   onSuccess,
+  event,
 }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    platform: "",
-    start: "",
-    end: "",
+    name: event.name,
+    description: event.description,
+    platform: event.platform,
+    start: event.start,
+    end: event.end,
   });
 
   const handleFormSubmit = async (e: any) => {
@@ -52,8 +63,8 @@ const CreateEvent: React.FC<Props> = ({
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/events/",
+      const response = await axios.patch(
+        `http://localhost:8000/api/events/${event.id}/`,
         formattedData,
         {
           headers: {
@@ -62,20 +73,32 @@ const CreateEvent: React.FC<Props> = ({
         }
       );
 
-      toast.success("Event created Successfully");
+      toast.success("Event saved Successfully");
       onClose();
-      setFormData({
-        name: "",
-        description: "",
-        start: "",
-        end: "",
-        platform: "",
-      });
       onSuccess(); // Notify the parent component about the new event
     } catch (error) {
       console.log(error);
-      toast.error("Error creating event:");
+      toast.error("Error updating event:");
     }
+  };
+  const handleDeleteSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    axios
+      .delete(`http://localhost:8000/api/events/${event.id}/`, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access")}`,
+        },
+      })
+      .then(() => {
+        toast.success("Event deleted");
+        onClose();
+        onSuccess();
+      })
+      .catch((error) => {
+        console.error("Error deleting event:", error);
+        toast.error("Error deleting event");
+      });
   };
 
   const handleChange = (field: string, value: string) => {
@@ -97,7 +120,7 @@ const CreateEvent: React.FC<Props> = ({
 
       <AlertDialogContent className="bg-white">
         <AlertDialogHeader className="bg-gray-800 text-white">
-          Create Event
+          Update {event.name}
         </AlertDialogHeader>
         <AlertDialogCloseButton />
         <AlertDialogBody>
@@ -165,20 +188,19 @@ const CreateEvent: React.FC<Props> = ({
                 color="white"
                 className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
               >
-                Create
+                Save
               </Button>
             </Stack>
           </form>
         </AlertDialogBody>
         <AlertDialogFooter>
           <Button
-            onClick={onClose}
-            className="bg-gray-300 p-2 rounded-md"
-            color="white"
-            bg="red"
-            _hover="red.200"
+            colorScheme="red"
+            onClick={handleDeleteSubmit}
+            className="flex justify-around gap-4"
           >
-            Cancel
+            <DeleteIcon />
+            Delete
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -186,4 +208,4 @@ const CreateEvent: React.FC<Props> = ({
   );
 };
 
-export default CreateEvent;
+export default EditEvent;

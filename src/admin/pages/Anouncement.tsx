@@ -14,7 +14,7 @@ interface Event {
   date: string;
 }
 
-const Anouncement = () => {
+const AdminAnouncement = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
@@ -77,4 +77,4 @@ const Anouncement = () => {
   );
 };
 
-export default Anouncement;
+export default AdminAnouncement;

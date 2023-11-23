@@ -57,6 +57,7 @@ const CreateAnnouncement: React.FC<Props> = ({
 
       toast.success("Event created Successfully");
       onClose();
+      setFormData({ name: "", description: "", date: "" });
       onSuccess(); // Notify the parent component about the new event
     } catch (error) {
       console.log(error);

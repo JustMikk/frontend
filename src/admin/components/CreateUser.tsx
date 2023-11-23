@@ -49,6 +49,7 @@ const CreateUser = ({ cancelRef, onClose, isOpen, onSuccess }: CreateProps) => {
 
       toast.success("Successfully registered!");
       onClose();
+      setFormData({ first_name: "", last_name: "", email: "", password: "" });
       onSuccess();
     } catch (error) {
       // Handle errors

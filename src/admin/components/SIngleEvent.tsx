@@ -4,6 +4,7 @@ import { GiTrophyCup } from "react-icons/gi";
 import { Link } from "react-router-dom"; // Import Link here
 import Delete from "./Delete";
 import { useRef } from "react";
+import EditEvent from "./EditEvent";
 
 interface SingleEventProps {
   onSuccess: any;
@@ -66,7 +67,17 @@ const SingleEvent: React.FC<SingleEventProps> = ({ event, onSuccess }) => {
   }
 
   return (
-    <div className="p-4 bg-white w-full rounded-xl shadow-xl">
+    <div
+      className="p-4 bg-white w-full rounded-xl shadow-xl flex flex-col gap-2 pb-8"
+      onClick={onOpen}
+    >
+      <EditEvent
+        onClose={onClose}
+        isOpen={isOpen}
+        onSuccess={onSuccess}
+        event={event}
+        cancelRef={cancelRef}
+      />
       <GiTrophyCup className="text-yellow-500" size="68" />
       <p className="text-neutral-700 font-bold text-2xl">{event.name}</p>
       <div className="flex items-center justify-between">
@@ -88,7 +99,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({ event, onSuccess }) => {
           {eventStatus}
         </Badge>
       </div>
-      <div className="flex items-start justify-end mt-5">
+      {/* <div className="flex items-start justify-end mt-5">
         <Button
           colorScheme="red"
           onClick={onOpen}
@@ -105,7 +116,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({ event, onSuccess }) => {
         onSuccess={onSuccess}
         event={event}
         cancelRef={cancelRef}
-      />
+      /> */}
     </div>
   );
 };

@@ -11,7 +11,7 @@ import LogOut from "../actions/LogOut";
 
 const links = [
   { label: "Home", href: "/" },
-  { label: "Anouncement", href: "/anouncement" },
+  { label: "Anouncement", href: "/announcements" },
   { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
 ];
@@ -48,7 +48,9 @@ const Navbar = () => {
       </div>
       <Popover>
         <PopoverTrigger>
-          <Avatar name={first_name && `${first_name} ${last_name}`} src="" />
+          <div className=" cursor-pointer">
+            <Avatar name={first_name && `${first_name} ${last_name}`} src="" />
+          </div>
         </PopoverTrigger>
         <Portal>
           <div className="w-4">
