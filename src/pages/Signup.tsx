@@ -1,8 +1,11 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import {
+  setTokens,
+  getUserData,
+  checkTokenExpiration,
+} from "../utils/tokenUtils";
 import Layout from "../layout/layout";
 
 const API_URL = "http://localhost:8000/auth";
@@ -15,33 +18,11 @@ const Signup = () => {
     password: "",
   });
 
-  const navigate = useNavigate();
-
-  const checkTokenExpiration = () => {
-    const token = localStorage.getItem("access");
-
-    if (token) {
-      const decodedToken = jwtDecode(token);
-
-      if (!decodedToken || !decodedToken.exp) {
-        return;
-      }
-
-      const currentTime = Math.floor(Date.now() / 1000);
-
-      console.log(currentTime);
-      console.log(decodedToken.exp);
-      if (decodedToken.exp < currentTime) {
-        navigate("/");
-      }
-    }
-  };
-
   useEffect(() => {
     checkTokenExpiration();
   }, []);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -49,58 +30,59 @@ const Signup = () => {
     }));
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: any) => {
     e.preventDefault();
 
-    try {
-      // Validation
-      if (
-        !formData.first_name ||
-        !formData.last_name ||
-        !formData.email ||
-        !formData.password
-      ) {
-        toast.error("Please fill in all fields");
-        return;
-      }
-
-      // Registration
-      const registrationResponse = await axios.post(
-        `${API_URL}/users/`,
-        formData
-      );
-
-      // Login
-      const loginResponse = await axios.post(`${API_URL}/jwt/create/`, {
-        email: formData.email,
-        password: formData.password,
-      });
-
-      // Set tokens
-      localStorage.setItem("access", loginResponse.data.access);
-      localStorage.setItem("refresh", loginResponse.data.refresh);
-
-      // Get user data
-      const header = {
-        Authorization: `JWT ${localStorage.getItem("access")}`,
-      };
-
-      const userResponse = await axios.get(`${API_URL}/users/me/`, {
-        headers: header,
-      });
-
-      // Update user info in local storage
-      localStorage.setItem("first_name", userResponse.data.first_name);
-      localStorage.setItem("last_name", userResponse.data.last_name);
-      localStorage.setItem("email", userResponse.data.email);
-
-      toast.success("Successfully registered and logged in!");
-    } catch (error) {
-      // Handle errors
-      console.error(error);
-      toast.error("Registration failed. Please try again.");
+    // Validation
+    if (
+      !formData.first_name ||
+      !formData.last_name ||
+      !formData.email ||
+      !formData.password
+    ) {
+      toast.error("Please fill in all fields");
+      return;
     }
+
+    // Registration
+    axios
+      .post(`${API_URL}/users/`, formData)
+      .then(() => {
+        // Login
+        return axios.post(`${API_URL}/jwt/create/`, {
+          email: formData.email,
+          password: formData.password,
+        });
+      })
+      .then((loginResponse) => {
+        // Set tokens
+        setTokens(loginResponse);
+
+        // Get user data
+        return getUserData();
+      })
+      .then(() => {
+        toast.success("Successfully registered and logged in!");
+      })
+      .catch((error) => {
+        // Handle errors
+        if (error.response) {
+          console.error(error.response.data);
+          console.error(error.response.status);
+          console.error(error.response.headers);
+          toast.error(`Registration failed: ${error.response.data.detail}`);
+        } else if (error.request) {
+          console.error(error.request);
+          toast.error(
+            "Registration failed. No response received from the server."
+          );
+        } else {
+          console.error("Error setting up the request", error.message);
+          toast.error("Registration failed. Please try again.");
+        }
+      });
   };
+
   return (
     <Layout>
       <div className="w-full flex items-center justify-center">

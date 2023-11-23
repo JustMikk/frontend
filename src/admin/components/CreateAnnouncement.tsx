@@ -36,33 +36,30 @@ const CreateAnnouncement: React.FC<Props> = ({
     date: "",
   });
 
-  const handleFormSubmit = async (e: any) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const detes = formData.date || new Date().toISOString();
+    const dates = formData.date || new Date().toISOString();
     const formattedData = {
       ...formData,
-      date: detes,
+      date: dates,
     };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/announcements/",
-        formattedData,
-        {
-          headers: {
-            Authorization: `JWT ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-
-      toast.success("Event created Successfully");
-      onClose();
-      setFormData({ name: "", description: "", date: "" });
-      onSuccess(); // Notify the parent component about the new event
-    } catch (error) {
-      console.log(error);
-      toast.error("Error creating event:");
-    }
+    axios
+      .post("http://localhost:8000/api/announcements/", formattedData, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access")}`,
+        },
+      })
+      .then(() => {
+        toast.success("Announcement created Successfully");
+        onClose();
+        setFormData({ name: "", description: "", date: "" });
+        onSuccess(); // Notify the parent component about the new announcement
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error creating announcement:");
+      });
   };
 
   const handleChange = (field: string, value: string) => {
@@ -124,7 +121,7 @@ const CreateAnnouncement: React.FC<Props> = ({
               <Button
                 type="submit"
                 bg="sky.700"
-                _hover="blue.300"
+                _hover={{ color: "blue.300" }}
                 color="white"
                 className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
               >
@@ -139,7 +136,7 @@ const CreateAnnouncement: React.FC<Props> = ({
             className="bg-gray-300 p-2 rounded-md"
             color="white"
             bg="red"
-            _hover="red.200"
+            _hover={{ color: "red.200" }}
           >
             Cancel
           </Button>

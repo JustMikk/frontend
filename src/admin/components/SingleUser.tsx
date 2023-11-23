@@ -48,40 +48,37 @@ const SingleUser = ({
     in_dev: user.in_dev,
     in_cbd: user.in_cbd,
   });
-  console.log(user);
-  const DeleteUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // console.log(formData);
 
-    try {
-      const deleteResponse = await axios.delete(`${API_URL}${user.id}/`, {
+  const DeleteUser = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    axios
+      .delete(`${API_URL}${user.id}/`, {
         headers: {
           Authorization: `JWT ${localStorage.getItem("access")}`,
         },
+      })
+      .then(() => {
+        toast.success("Successfully deleted!");
+        onSuccess();
+      })
+      .catch(() => {
+        toast.error("Something went wrong. Please try again.");
       });
-
-      toast.success("Successfully delleted!");
-      onSuccess();
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    }
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // console.log(formData);
 
-    try {
-      const registrationResponse = await axios.patch(
-        `${API_URL}${user.id}/`,
-        formData
-      );
-
-      toast.success("Successfully saved!");
-      onSuccess();
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    }
+    axios
+      .patch(`${API_URL}${user.id}/`, formData)
+      .then(() => {
+        toast.success("Successfully saved!");
+        onSuccess();
+      })
+      .catch(() => {
+        toast.error("Something went wrong. Please try again.");
+      });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

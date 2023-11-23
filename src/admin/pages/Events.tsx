@@ -16,7 +16,7 @@ interface Event {
   end: string;
 }
 
-const Events = () => {
+const AdminEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
@@ -78,4 +78,4 @@ const Events = () => {
   );
 };
 
-export default Events;
+export default AdminEvents;

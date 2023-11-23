@@ -1,18 +1,17 @@
 import { Badge, useDisclosure } from "@chakra-ui/react";
+import React from "react";
 import { GiTrophyCup } from "react-icons/gi";
-import { Link } from "react-router-dom";
-import { useRef } from "react";
-import EditEvent from "./EditEvent";
+import EventDetail from "./EventDetails";
 
 interface SingleEventProps {
-  onSuccess: any;
+  onSuccess: () => void;
   event: {
     id: number;
     name: string;
     description: string;
-    platform: string;
     start: string;
     end: string;
+    platform: string;
   };
 }
 
@@ -43,10 +42,9 @@ const getEventStatus = (start: string, end: string): string => {
     return "Past";
   }
 };
+
 const SingleEvent: React.FC<SingleEventProps> = ({ event, onSuccess }) => {
   const eventStatus = getEventStatus(event.start, event.end);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
 
   let badgeColorScheme: string;
 
@@ -58,27 +56,28 @@ const SingleEvent: React.FC<SingleEventProps> = ({ event, onSuccess }) => {
       badgeColorScheme = "blue";
       break;
     case "Past":
-      badgeColorScheme = "red"; // or any other color you prefer for past events
+      badgeColorScheme = "red";
       break;
     default:
-      badgeColorScheme = "red"; // default to gray if the status is not recognized
+      badgeColorScheme = "red";
   }
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <div
-      className="p-4 bg-white w-full rounded-xl shadow-xl flex flex-col gap-2 pb-8"
+      className="p-4 bg-white w-full rounded-xl shadow-xl cursor-pointer"
       onClick={onOpen}
     >
-      <EditEvent
+      <EventDetail
         onClose={onClose}
         isOpen={isOpen}
         onSuccess={onSuccess}
         event={event}
-        cancelRef={cancelRef}
       />
-      <GiTrophyCup className="text-yellow-500" size="68" />
-      <p className="text-neutral-700 font-bold text-2xl">{event.name}</p>
-      <div className="flex items-center justify-between">
+      <GiTrophyCup size={68} className="text-center text-yellow-500" />
+      <p className="text-neutral-700 font-bold text-2xl pt-3">{event.name}</p>
+      <div className="flex items-center justify-between py-3">
         <p className="text-neutral-400 font-medium text-xs">
           Start: {formatDateTime(event.start)}
         </p>
@@ -87,34 +86,13 @@ const SingleEvent: React.FC<SingleEventProps> = ({ event, onSuccess }) => {
         </p>
       </div>
       <div className="flex items-center justify-between">
-        <Link
-          to={event.platform}
-          className="text-neutral-700 font-bold text-xs"
-        >
-          {event.platform}
-        </Link>
+        <div className="text-neutral-700 font-bold text-xs">
+          {event.description.slice(0, 30)}
+        </div>
         <Badge ml="1" fontSize="0.8em" colorScheme={badgeColorScheme}>
           {eventStatus}
         </Badge>
       </div>
-      {/* <div className="flex items-start justify-end mt-5">
-        <Button
-          colorScheme="red"
-          onClick={onOpen}
-          className="flex justify-around gap-2"
-        >
-          <DeleteIcon />
-          Delete
-        </Button>
-      </div>
-      <Delete
-        onClose={onClose}
-        isOpen={isOpen}
-        API_URL="http://localhost:8000/api/events"
-        onSuccess={onSuccess}
-        event={event}
-        cancelRef={cancelRef}
-      /> */}
     </div>
   );
 };

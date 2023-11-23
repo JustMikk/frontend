@@ -1,4 +1,3 @@
-// CreateEvent.tsx
 import {
   AlertDialog,
   AlertDialogOverlay,
@@ -41,7 +40,7 @@ const CreateEvent: React.FC<Props> = ({
     end: "",
   });
 
-  const handleFormSubmit = async (e: any) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const startDate = formData.start || new Date().toISOString();
     const endDate = formData.end || new Date().toISOString();
@@ -51,31 +50,28 @@ const CreateEvent: React.FC<Props> = ({
       end: endDate,
     };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/events/",
-        formattedData,
-        {
-          headers: {
-            Authorization: `JWT ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-
-      toast.success("Event created Successfully");
-      onClose();
-      setFormData({
-        name: "",
-        description: "",
-        start: "",
-        end: "",
-        platform: "",
+    axios
+      .post("http://localhost:8000/api/events/", formattedData, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access")}`,
+        },
+      })
+      .then(() => {
+        toast.success("Event created Successfully");
+        onClose();
+        setFormData({
+          name: "",
+          description: "",
+          start: "",
+          end: "",
+          platform: "",
+        });
+        onSuccess(); // Notify the parent component about the new event
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error creating event:");
       });
-      onSuccess(); // Notify the parent component about the new event
-    } catch (error) {
-      console.log(error);
-      toast.error("Error creating event:");
-    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -161,7 +157,7 @@ const CreateEvent: React.FC<Props> = ({
               <Button
                 type="submit"
                 bg="sky.700"
-                _hover="blue.300"
+                _hover={{ color: "blue.300" }}
                 color="white"
                 className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
               >
@@ -176,7 +172,7 @@ const CreateEvent: React.FC<Props> = ({
             className="bg-gray-300 p-2 rounded-md"
             color="white"
             bg="red"
-            _hover="red.200"
+            _hover={{ color: "red.200" }}
           >
             Cancel
           </Button>

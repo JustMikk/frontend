@@ -13,8 +13,6 @@ import {
   Stack,
   FormControl,
   FormLabel,
-  InputGroup,
-  InputRightAddon,
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useState } from "react";
@@ -48,33 +46,34 @@ const EditAnnouncement: React.FC<Props> = ({
     date: event.date,
   });
 
-  const handleFormSubmit = async (e: any) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const dates = formData.date || new Date().toISOString();
 
-    try {
-      const formattedData = {
-        ...formData,
-        date: dates,
-      };
-      const response = await axios.patch(
+    axios
+      .patch(
         `http://localhost:8000/api/announcements/${event.id}/`,
-        formattedData,
+        {
+          ...formData,
+          date: dates,
+        },
         {
           headers: {
             Authorization: `JWT ${localStorage.getItem("access")}`,
           },
         }
-      );
-
-      toast.success("Announcements saved Successfully");
-      onClose();
-      onSuccess(); // Notify the parent component about the new event
-    } catch (error) {
-      console.log(error);
-      toast.error("Error updating announcements:");
-    }
+      )
+      .then(() => {
+        toast.success("Announcements saved Successfully");
+        onClose();
+        onSuccess(); // Notify the parent component about the new event
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error updating announcements:");
+      });
   };
+
   const handleDeleteSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -154,7 +153,7 @@ const EditAnnouncement: React.FC<Props> = ({
               <Button
                 type="submit"
                 bg="sky.700"
-                _hover="blue.300"
+                _hover={{ color: "blue.300" }}
                 color="white"
                 className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
               >

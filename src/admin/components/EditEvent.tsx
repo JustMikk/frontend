@@ -21,11 +21,11 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 interface Event {
-  id: number; // Assuming the id is a number, adjust accordingly
+  id: number;
   name: string;
   description: string;
   platform: string;
-  start: string; // Assuming start and end are string representations of dates
+  start: string;
   end: string;
 }
 
@@ -52,7 +52,7 @@ const EditEvent: React.FC<Props> = ({
     end: event.end,
   });
 
-  const handleFormSubmit = async (e: any) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const startDate = formData.start || new Date().toISOString();
     const endDate = formData.end || new Date().toISOString();
@@ -62,25 +62,23 @@ const EditEvent: React.FC<Props> = ({
       end: endDate,
     };
 
-    try {
-      const response = await axios.patch(
-        `http://localhost:8000/api/events/${event.id}/`,
-        formattedData,
-        {
-          headers: {
-            Authorization: `JWT ${localStorage.getItem("access")}`,
-          },
-        }
-      );
-
-      toast.success("Event saved Successfully");
-      onClose();
-      onSuccess(); // Notify the parent component about the new event
-    } catch (error) {
-      console.log(error);
-      toast.error("Error updating event:");
-    }
+    axios
+      .patch(`http://localhost:8000/api/events/${event.id}/`, formattedData, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access")}`,
+        },
+      })
+      .then(() => {
+        toast.success("Event saved Successfully");
+        onClose();
+        onSuccess(); // Notify the parent component about the new event
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Error updating event:");
+      });
   };
+
   const handleDeleteSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -127,7 +125,6 @@ const EditEvent: React.FC<Props> = ({
           {/* Form for input fields */}
           <form onSubmit={handleFormSubmit}>
             <Stack spacing={4}>
-              {/* ... (other form controls) */}
               <FormControl>
                 <FormLabel>Name:</FormLabel>
                 <Input
@@ -184,7 +181,7 @@ const EditEvent: React.FC<Props> = ({
               <Button
                 type="submit"
                 bg="sky.700"
-                _hover="blue.300"
+                _hover={{ color: "blue.300" }}
                 color="white"
                 className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
               >

@@ -1,5 +1,5 @@
 import { Badge, useDisclosure } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import React from "react";
 import { HiSpeakerphone } from "react-icons/hi";
 import AnnouncementDetail from "./AnnouncementDetail";
 
@@ -65,7 +65,6 @@ const SingleAnouncement: React.FC<SingleAnouncementProps> = ({
   }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
 
   return (
     <div

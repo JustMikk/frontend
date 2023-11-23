@@ -27,36 +27,46 @@ const CreateUser = ({ cancelRef, onClose, isOpen, onSuccess }: CreateProps) => {
     password: "",
   });
 
-  const onSubmit = async (e: any) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      // Validation
-      if (
-        !formData.first_name ||
-        !formData.last_name ||
-        !formData.email ||
-        !formData.password
-      ) {
-        toast.error("Please fill in all fields");
-        return;
-      }
-
-      // Registration
-      const registrationResponse = await axios.post(
-        `${API_URL}/users/`,
-        formData
-      );
-
-      toast.success("Successfully registered!");
-      onClose();
-      setFormData({ first_name: "", last_name: "", email: "", password: "" });
-      onSuccess();
-    } catch (error) {
-      // Handle errors
-      console.error(error);
-      toast.error("Registration failed. Please try again.");
+    // Validation
+    if (
+      !formData.first_name ||
+      !formData.last_name ||
+      !formData.email ||
+      !formData.password
+    ) {
+      toast.error("Please fill in all fields");
+      return;
     }
+
+    // Registration
+    axios
+      .post(`${API_URL}/users/`, formData)
+      .then((response) => {
+        // Check if the registration was successful (based on your API response structure)
+        if (response.data && response.data.success) {
+          toast.success("Successfully registered!");
+          onClose();
+          setFormData({
+            first_name: "",
+            last_name: "",
+            email: "",
+            password: "",
+          });
+          onSuccess();
+        } else {
+          // Handle registration failure
+          toast.error("Registration failed. Please try again.");
+        }
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error(error);
+        toast.error("Registration failed. Please try again.");
+      });
   };
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -64,6 +74,7 @@ const CreateUser = ({ cancelRef, onClose, isOpen, onSuccess }: CreateProps) => {
       [name]: value,
     }));
   };
+
   return (
     <AlertDialog
       motionPreset="slideInBottom"
@@ -78,9 +89,6 @@ const CreateUser = ({ cancelRef, onClose, isOpen, onSuccess }: CreateProps) => {
         <AlertDialogHeader>Add new User</AlertDialogHeader>
         <AlertDialogCloseButton />
         <AlertDialogFooter>
-          {/* <Button ref={cancelRef} onClick={onClose}>
-            No
-          </Button> */}
           <div className="flex flex-col gap-4 items-center justify-center w-full">
             <form
               action=""
@@ -127,9 +135,6 @@ const CreateUser = ({ cancelRef, onClose, isOpen, onSuccess }: CreateProps) => {
               </button>
             </form>
           </div>
-          {/* <Button colorScheme="red" ml={3}>
-            Yes
-          </Button> */}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

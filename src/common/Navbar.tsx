@@ -12,7 +12,7 @@ import LogOut from "../actions/LogOut";
 const links = [
   { label: "Home", href: "/" },
   { label: "Anouncement", href: "/announcements" },
-  { label: "Contact", href: "/contact" },
+  { label: "Events", href: "/events" },
   { label: "About", href: "/about" },
 ];
 

@@ -16,12 +16,7 @@ const Announcements = () => {
   const fetchannouncements = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/announcements/",
-        {
-          headers: {
-            Authorization: `JWT ${localStorage.getItem("access")}`,
-          },
-        }
+        "http://localhost:8000/api/announcements/"
       );
       setAnnouncements(response.data);
     } catch (error) {
