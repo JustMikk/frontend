@@ -53,15 +53,15 @@ const data = [
   },
 ];
 
-const averages = {
-  name: "Average",
-  uv: data.reduce((sum, entry) => sum + entry.uv, 0) / data.length,
-  pv: data.reduce((sum, entry) => sum + entry.pv, 0) / data.length,
-  amt: data.reduce((sum, entry) => sum + entry.amt, 0) / data.length,
-};
+// const averages = {
+//   name: "Average",
+//   uv: data.reduce((sum, entry) => sum + entry.uv, 0) / data.length,
+//   pv: data.reduce((sum, entry) => sum + entry.pv, 0) / data.length,
+//   amt: data.reduce((sum, entry) => sum + entry.amt, 0) / data.length,
+// };
 
 // Add averages to data
-const dataWithAverages = [...data, averages];
+// const dataWithAverages = [...data, averages];
 
 const Chart = () => {
   return (

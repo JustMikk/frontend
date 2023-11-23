@@ -29,7 +29,13 @@ const AdminNavbar: React.FC = () => {
     <nav className="w-full h-20 px-10 py-2 bg-white flex items-center justify-end shadow-2xl">
       <Popover>
         <PopoverTrigger>
-          <Avatar name={`${first_name} ${last_name}`} src="" />
+          <div className=" cursor-pointer">
+            <Avatar
+              className="cursore-pointer"
+              name={first_name && `${first_name} ${last_name}`}
+              src=""
+            />
+          </div>
         </PopoverTrigger>
         <Portal>
           <div className="w-4">

@@ -48,7 +48,7 @@ const UsersTable: React.FC<Props> = ({ API_URL }) => {
   }, []); // Empty dependency array means this effect runs only once on mount
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <TableContainer>
         <Table variant="simple">
           <TableCaption>All members</TableCaption>
